@@ -17,7 +17,9 @@ import pjatk.s24671.zad3_sri.repo.CarRepository;
 import pjatk.s24671.zad3_sri.repo.PersonRepository;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -125,10 +127,10 @@ public class PersonController {
             PersonDto personDto = convertToDto(person);
             List<CarDto> cars = person.getCars().stream().map(this::convertCarToDto).collect(Collectors.toList());
             
-            return ResponseEntity.ok(new Object() {
-                public PersonDto getPerson() { return personDto; }
-                public List<CarDto> getCars() { return cars; }
-            });
+            Map<String, Object> result = new HashMap<>();
+            result.put("person", personDto);
+            result.put("cars", cars);
+            return ResponseEntity.ok(result);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
