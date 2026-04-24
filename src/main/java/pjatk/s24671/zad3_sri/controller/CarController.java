@@ -1,27 +1,31 @@
-package pjatk.s24671.zad2_sri.controller;
+package pjatk.s24671.zad3_sri.controller;
 
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import pjatk.s24671.zad2_sri.dto.CarDto;
-import pjatk.s24671.zad2_sri.model.Car;
-import pjatk.s24671.zad2_sri.repo.CarRepository;
+import pjatk.s24671.zad3_sri.dto.CarDto;
+import pjatk.s24671.zad3_sri.model.Car;
+import pjatk.s24671.zad3_sri.repo.CarRepository;
 
-import javax.swing.text.html.Option;
 import java.net.URI;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/api/cars")
 public class CarController {
-    private CarRepository carRepository;
-    private ModelMapper modelMapper;
+    private final CarRepository carRepository;
+    private final ModelMapper modelMapper;
 
     public CarController(CarRepository carRepository, ModelMapper modelMapper) {
         this.carRepository = carRepository;
@@ -29,7 +33,12 @@ public class CarController {
     }
 
     private CarDto convertToDto(Car c) {
-        return modelMapper.map(c, CarDto.class);
+        CarDto dto = modelMapper.map(c, CarDto.class);
+        dto.add(linkTo(methodOn(CarController.class).getCarById(c.getId())).withSelfRel());
+        if (c.getPerson() != null) {
+            dto.add(linkTo(methodOn(PersonController.class).getPersonById(c.getPerson().getId())).withRel("person"));
+        }
+        return dto;
     }
 
     private Car convertToEntity(CarDto dto) {
@@ -37,12 +46,13 @@ public class CarController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<CarDto>> getCars() {
+    public ResponseEntity<CollectionModel<CarDto>> getCars() {
         List<Car> allCars = carRepository.findAll();
         List<CarDto> result = allCars.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        Link selfLink = linkTo(methodOn(CarController.class).getCars()).withSelfRel();
+        return new ResponseEntity<>(CollectionModel.of(result, selfLink), HttpStatus.OK);
     }
 
     @GetMapping("/{carId}")
@@ -57,7 +67,7 @@ public class CarController {
     }
 
     @PostMapping()
-    public ResponseEntity createCar(@RequestBody CarDto carDto) {
+    public ResponseEntity createCar(@Valid @RequestBody CarDto carDto) {
         Car newCar = convertToEntity(carDto);
         carRepository.save(newCar);
 
@@ -71,14 +81,17 @@ public class CarController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
-
     @PutMapping("/{carId}")
-    public ResponseEntity updateCar(@PathVariable Long carId, @RequestBody CarDto carDto) {
+    public ResponseEntity updateCar(@PathVariable Long carId, @Valid @RequestBody CarDto carDto) {
         Optional<Car> car = carRepository.findById(carId);
 
         if(car.isPresent()){
             carDto.setId(carId);
             Car entity = convertToEntity(carDto);
+            
+            // Zachowajmy powiązanie z osobą przy aktualizacji, aby go nie stracić
+            entity.setPerson(car.get().getPerson());
+            
             carRepository.save(entity);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
@@ -87,7 +100,7 @@ public class CarController {
     }
 
     @DeleteMapping("/{carId}")
-    public ResponseEntity updateCar(@PathVariable Long carId) {
+    public ResponseEntity deleteCar(@PathVariable Long carId) {
         boolean isPresent = carRepository.existsById(carId);
 
         if(isPresent){

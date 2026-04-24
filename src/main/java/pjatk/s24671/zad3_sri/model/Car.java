@@ -1,9 +1,11 @@
-package pjatk.s24671.zad2_sri.model;
+package pjatk.s24671.zad3_sri.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,4 +24,8 @@ public class Car {
     private Integer productionYear;
     private String vin;
     private String color;
+
+    @ManyToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
 }

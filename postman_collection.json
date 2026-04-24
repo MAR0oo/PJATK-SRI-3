@@ -1,0 +1,236 @@
+{
+	"info": {
+		"_postman_id": "a9332e92-f018-4a58-8b5e-2938e2d422a5",
+		"name": "SRI_Zad3_Car_Person_API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Cars",
+			"item": [
+				{
+					"name": "Get All Cars",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/cars",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Car",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"brand\": \"Toyota\",\n    \"model\": \"Corolla\",\n    \"productionYear\": 2020,\n    \"vin\": \"1234567890ABCDEF\",\n    \"color\": \"Red\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/cars",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Car - Validation Error",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"brand\": \"\",\n    \"model\": \"Corolla\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/cars",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Persons",
+			"item": [
+				{
+					"name": "Get All Persons",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/persons",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"persons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Person",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Jan\",\n    \"lastName\": \"Kowalski\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/persons",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"persons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Person with Cars (Details)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/persons/1/details",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"persons",
+								"1",
+								"details"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Only Person Cars",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/persons/1/cars",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"persons",
+								"1",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Car to Person",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/persons/1/cars/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"persons",
+								"1",
+								"cars",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Car from Person",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/persons/1/cars/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"persons",
+								"1",
+								"cars",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

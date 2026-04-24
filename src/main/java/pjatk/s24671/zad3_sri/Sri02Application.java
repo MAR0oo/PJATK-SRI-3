@@ -1,4 +1,4 @@
-package pjatk.s24671.zad2_sri;
+package pjatk.s24671.zad3_sri;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
