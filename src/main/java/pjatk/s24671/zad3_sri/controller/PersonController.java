@@ -116,9 +116,7 @@ public class PersonController {
         }
     }
 
-    // A. Pobranie osoby z jej samochodami - jako dto, ale spring domyslnie ucina rekursje. 
-    // Zrobimy dedykowany DTO (z autami) lub wykorzystamy Map/Record. 
-    // Najprościej: stworzyć w locie obiekt z autami.
+
     @GetMapping("/{personId}/details")
     public ResponseEntity<?> getPersonDetails(@PathVariable Long personId) {
         Optional<Person> personOpt = personRepository.findById(personId);
@@ -127,7 +125,6 @@ public class PersonController {
             PersonDto personDto = convertToDto(person);
             List<CarDto> cars = person.getCars().stream().map(this::convertCarToDto).collect(Collectors.toList());
             
-            // Prosty sposób na zwrócenie kompozytu:
             return ResponseEntity.ok(new Object() {
                 public PersonDto getPerson() { return personDto; }
                 public List<CarDto> getCars() { return cars; }
@@ -136,7 +133,6 @@ public class PersonController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // B. Pobranie wyłącznie samochodów dla wybranej osoby
     @GetMapping("/{personId}/cars")
     public ResponseEntity<CollectionModel<CarDto>> getPersonCars(@PathVariable Long personId) {
         Optional<Person> personOpt = personRepository.findById(personId);
@@ -150,7 +146,6 @@ public class PersonController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // C. Stworzenie nowego powiązania między istniejącymi obiektami
     @PostMapping("/{personId}/cars/{carId}")
     public ResponseEntity<?> addCarToPerson(@PathVariable Long personId, @PathVariable Long carId) {
         Optional<Person> personOpt = personRepository.findById(personId);
@@ -168,7 +163,6 @@ public class PersonController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // D. Usunięcie powiązania pomiędzy istniejącymi obiektami
     @DeleteMapping("/{personId}/cars/{carId}")
     public ResponseEntity<?> removeCarFromPerson(@PathVariable Long personId, @PathVariable Long carId) {
         Optional<Person> personOpt = personRepository.findById(personId);

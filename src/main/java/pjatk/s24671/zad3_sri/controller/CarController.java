@@ -89,7 +89,6 @@ public class CarController {
             carDto.setId(carId);
             Car entity = convertToEntity(carDto);
             
-            // Zachowajmy powiązanie z osobą przy aktualizacji, aby go nie stracić
             entity.setPerson(car.get().getPerson());
             
             carRepository.save(entity);
